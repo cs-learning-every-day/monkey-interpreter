@@ -30,6 +30,14 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var t token.Token
 	l.skipWhitespace()
@@ -37,11 +45,38 @@ func (l *Lexer) NextToken() token.Token {
 	case '+':
 		t = newToken(token.PLUS, l.ch)
 	case '=':
-		t = newToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			t = token.Token{Type: token.EQ, Literal: literal}
+		} else {
+			t = newToken(token.ASSIGN, l.ch)
+		}
+	case '-':
+		t = newToken(token.MINUS, l.ch)
+	case '!':
+		if l.peekChar() == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			t = token.Token{Type: token.NEQ, Literal: literal}
+		} else {
+
+			t = newToken(token.BANG, l.ch)
+		}
+	case '/':
+		t = newToken(token.SLASH, l.ch)
+	case '*':
+		t = newToken(token.ASTARISK, l.ch)
+	case '<':
+		t = newToken(token.LT, l.ch)
+	case '>':
+		t = newToken(token.GT, l.ch)
 	case ',':
 		t = newToken(token.COMMA, l.ch)
 	case ';':
-		t = newToken(token.SESSION, l.ch)
+		t = newToken(token.SEMICOLON, l.ch)
 	case '(':
 		t = newToken(token.LPAREN, l.ch)
 	case ')':

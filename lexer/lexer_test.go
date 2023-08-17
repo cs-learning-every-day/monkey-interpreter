@@ -6,12 +6,24 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := `let five = 5;
+	input := `
+	let five = 5;
 	let ten = 10;
 	let add = fn(x, y) {
 		x + y;	
 	};
 	let result = add(five, ten);
+	!-/*0;
+	2 < 10 > 7;
+
+	if (5 < 10) {
+		return true;
+	} else {
+		return false;
+	}
+
+	10 == 10;
+	10 != 9;
 	`
 
 	tests := []struct {
@@ -22,13 +34,13 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "five"},
 		{token.ASSIGN, "="},
 		{token.INT, "5"},
-		{token.SESSION, ";"},
+		{token.SEMICOLON, ";"},
 
 		{token.LET, "let"},
 		{token.IDENT, "ten"},
 		{token.ASSIGN, "="},
 		{token.INT, "10"},
-		{token.SESSION, ";"},
+		{token.SEMICOLON, ";"},
 
 		{token.LET, "let"},
 		{token.IDENT, "add"},
@@ -44,10 +56,10 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "x"},
 		{token.PLUS, "+"},
 		{token.IDENT, "y"},
-		{token.SESSION, ";"},
+		{token.SEMICOLON, ";"},
 
 		{token.RBRACE, "}"},
-		{token.SESSION, ";"},
+		{token.SEMICOLON, ";"},
 
 		{token.LET, "let"},
 		{token.IDENT, "result"},
@@ -58,7 +70,47 @@ func TestNextToken(t *testing.T) {
 		{token.COMMA, ","},
 		{token.IDENT, "ten"},
 		{token.RPAREN, ")"},
-		{token.SESSION, ";"},
+		{token.SEMICOLON, ";"},
+		{token.BANG, "!"},
+		{token.MINUS, "-"},
+		{token.SLASH, "/"},
+		{token.ASTARISK, "*"},
+		{token.INT, "0"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "2"},
+		{token.LT, "<"},
+		{token.INT, "10"},
+		{token.GT, ">"},
+		{token.INT, "7"},
+		{token.SEMICOLON, ";"},
+
+		{token.IF, "if"},
+		{token.LPAREN, "("},
+		{token.INT, "5"},
+		{token.LT, "<"},
+		{token.INT, "10"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.TRUE, "true"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+		{token.ELSE, "else"},
+		{token.LBRACE, "{"},
+		{token.RETURN, "return"},
+		{token.FALSE, "false"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
+
+		{token.INT, "10"},
+		{token.EQ, "=="},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
+		{token.INT, "10"},
+		{token.NEQ, "!="},
+		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
+
 		{token.EOF, ""},
 	}
 	l := New(input)
