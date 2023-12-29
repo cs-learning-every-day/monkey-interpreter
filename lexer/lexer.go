@@ -62,7 +62,6 @@ func (l *Lexer) NextToken() token.Token {
 			literal := string(ch) + string(l.ch)
 			t = token.Token{Type: token.NEQ, Literal: literal}
 		} else {
-
 			t = newToken(token.BANG, l.ch)
 		}
 	case '/':
